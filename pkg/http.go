@@ -9,6 +9,9 @@ import (
 	"time"
 )
 
+type Archiver struct {
+}
+
 const (
 	userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"
 	timeout   = time.Duration(30) * time.Second
@@ -20,9 +23,7 @@ var (
 	base = "https://web.archive.org/save/"
 )
 
-func fetch(url string, ch chan<- string) {
-	start := time.Now()
-
+func (wbrc *Archiver) fetch(url string, ch chan<- string) {
 	client := &http.Client{
 		Timeout: timeout,
 	}
@@ -43,14 +44,11 @@ func fetch(url string, ch chan<- string) {
 
 	loc := resp.Header.Get("Content-Location")
 
-	nbytes, err := io.Copy(ioutil.Discard, resp.Body)
+	_, err = io.Copy(ioutil.Discard, resp.Body)
 	if err != nil {
 		ch <- fmt.Sprint(err)
 		return
 	}
-
-	secs := time.Since(start).Seconds()
-	fmt.Printf("%.2fs %7d %s\n", secs, nbytes, url)
 
 	ch <- fmt.Sprintf("%v%v", dest, loc)
 }

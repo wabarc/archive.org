@@ -3,8 +3,9 @@ package ia
 import (
 	"flag"
 	"fmt"
-	"github.com/wabarc/archive.org/pkg"
 	"os"
+
+	"github.com/wabarc/archive.org/pkg"
 )
 
 func Run() {
@@ -19,8 +20,9 @@ func Run() {
 		os.Exit(1)
 	}
 
-	saved := ia.Wayback(args)
-	for _, link := range saved {
-		fmt.Println(link)
+	wbrc := &ia.Archiver{}
+	saved, _ := wbrc.Wayback(args)
+	for orig, dest := range saved {
+		fmt.Println(orig, "=>", dest)
 	}
 }

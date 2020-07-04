@@ -1,6 +1,6 @@
 # A Golang and Command-Line Interface to Archive.org
 
-This package installs a command-line tool named archive.org for using Archive.org from the command-line. It also installs the Golang package for programmatic snapshot webpage to archive.org. Please report all bugs and issues on [Github](https://github.com/wabarc/archive.org/issues).
+This package is a command-line tool named `archive.org` saving webpage to [Internet Archive](https://archive.org), it also supports imports as a Golang package for a programmatic. Please report all bugs and issues on [Github](https://github.com/wabarc/archive.org/issues).
 
 ## Installation
 
@@ -19,12 +19,8 @@ Output:
 version: 0.0.1
 date: unknown
 
-1.06s  250013 https://www.bbc.com
-5.94s   15303 https://www.google.com
-7.01s elapsed
-
-https://web.archive.org/web/20200613094506/https://www.bbc.com
-https://web.archive.org/web/20200613094506/https://www.google.com
+https://www.bbc.com => https://web.archive.org/web/20200613094506/https://www.bbc.com
+https://www.google.com => https://web.archive.org/web/20200613094506/https://www.google.com
 ```
 
 #### Go package interfaces
@@ -32,25 +28,25 @@ https://web.archive.org/web/20200613094506/https://www.google.com
 ```go
 package main
 
+package ia
+
 import (
-	"fmt"
-	"github.com/wabarc/archive.org/pkg"
-	"strings"
+        "fmt"
+
+        "github.com/wabarc/archive.org/pkg"
 )
 
 func main() {
-	links := []string{"https://www.google.com", "https://www.bbc.com"}
-	r := ia.Wayback(links)
-	fmt.Println(strings.Join(r, "\n"))
+        wbrc := &ia.Archiver{}
+        saved, _ := wbrc.Wayback(args)
+        for orig, dest := range saved {
+                fmt.Println(orig, "=>", dest)
+        }
 }
 
 // Output:
-// 0.96s  250013 https://www.bbc.com
-// 6.06s  213507 https://www.google.com
-// 7.02s elapsed
-//
-// https://web.archive.org/web/20200613094640/https://www.bbc.com
-// https://web.archive.org/web/20200613094640/https://www.google.com
+// https://www.bbc.com => https://web.archive.org/web/20200613094640/https://www.bbc.com
+// https://www.google.com => https://web.archive.org/web/20200613094640/https://www.google.com
 ```
 
 ## License
