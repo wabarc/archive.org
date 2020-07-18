@@ -2,8 +2,6 @@ package ia
 
 import (
 	"fmt"
-	"io"
-	"io/ioutil"
 	"net/http"
 	"regexp"
 	"time"
@@ -34,23 +32,31 @@ func (wbrc *Archiver) fetch(url string, ch chan<- string) {
 		ch <- fmt.Sprint(err)
 		return
 	}
-
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		ch <- fmt.Sprintf("status code error: %d %s", resp.StatusCode, resp.Status)
+	var loc string
+	loc = resp.Header.Get("Content-Location")
+
+	if len(loc) > 0 {
+		ch <- fmt.Sprintf("%v%v", dest, loc)
 		return
 	}
 
-	loc := resp.Header.Get("Content-Location")
-
-	_, err = io.Copy(ioutil.Discard, resp.Body)
-	if err != nil {
-		ch <- fmt.Sprint(err)
+	loc = resp.Header.Get("Location")
+	if len(loc) > 0 {
+		ch <- fmt.Sprintf("%v%v", dest, loc)
 		return
 	}
 
-	ch <- fmt.Sprintf("%v%v", dest, loc)
+	links := resp.Header.Get("Link")
+	re := regexp.MustCompile(`(?m)http[s]?:\/\/web\.archive\.org/web/[-a-zA-Z0-9@:%_\+.~#?&//=]*`)
+	if match := re.FindAllString(links, -1); len(match) > 0 {
+		loc = match[len(match)-1]
+		ch <- fmt.Sprintf("%v", loc)
+		return
+	}
+
+	ch <- fmt.Sprintf("The Internet Archive: %v %v for url: %v", resp.StatusCode, http.StatusText(resp.StatusCode), base+url)
 }
 
 func isURL(str string) bool {
