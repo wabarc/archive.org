@@ -51,5 +51,5 @@ func main() {
 
 ## License
 
-Permissive GPL 3.0 license, see the [LICENSE](https://github.com/wabarc/archive.org/blob/master/LICENSE) file for details.
+Permissive GPL 3.0 license, see the [LICENSE](https://github.com/wabarc/archive.org/blob/main/LICENSE) file for details.
 
