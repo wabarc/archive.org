@@ -62,11 +62,18 @@ func (wbrc *Archiver) fetch(url string, ch chan<- string) {
 		return
 	}
 
+	// HTTP 509 Bandwidth Limit Exceeded
+	if resp.StatusCode == 509 {
+		// https://web.archive.org/*/https://example.org
+		ch <- fmt.Sprintf("%s/*/%s", dest, url)
+		return
+	}
+
 	ch <- fmt.Sprintf("The Internet Archive: %v %v for url: %v", resp.StatusCode, http.StatusText(resp.StatusCode), base+url)
 }
 
 func isURL(str string) bool {
-	re := regexp.MustCompile(`(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)`)
+	re := regexp.MustCompile(`(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,255}\.[a-z]{0,63}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)`)
 	match := re.FindAllString(str, -1)
 	for _, el := range match {
 		if len(el) > 2 {
