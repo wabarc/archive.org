@@ -1,8 +1,11 @@
 package ia
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"net/url"
 	"regexp"
 	"time"
 )
@@ -19,6 +22,8 @@ var (
 	host = "archive.org"
 	dest = "https://web." + host
 	base = "https://web.archive.org/save/"
+
+	endpoint = "https://archive.org/wayback/available"
 )
 
 func (wbrc *Archiver) fetch(url string, ch chan<- string) {
@@ -62,10 +67,16 @@ func (wbrc *Archiver) fetch(url string, ch chan<- string) {
 		return
 	}
 
+	got := latest(url)
+
 	// HTTP 509 Bandwidth Limit Exceeded
 	if resp.StatusCode == 509 {
-		// https://web.archive.org/*/https://example.org
-		ch <- fmt.Sprintf("%s/*/%s", dest, url)
+		ch <- fmt.Sprint(got)
+		return
+	}
+
+	if resp.StatusCode != 200 {
+		ch <- fmt.Sprint(got)
 		return
 	}
 
@@ -81,4 +92,40 @@ func isURL(str string) bool {
 		}
 	}
 	return false
+}
+
+func latest(s string) string {
+	// https://web.archive.org/*/https://example.org
+	u := fmt.Sprintf("%s/*/%s", dest, s)
+
+	if _, err := url.Parse(s); err != nil {
+		return u
+	}
+
+	endpoint += "?url=" + s
+	resp, err := http.Get(endpoint)
+	if err != nil {
+		return u
+	}
+	defer resp.Body.Close()
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return u
+	}
+
+	var dat map[string]interface{}
+	if err := json.Unmarshal(data, &dat); err != nil {
+		return u
+	}
+
+	if archived, ok := dat["archived_snapshots"].(map[string]interface{}); ok {
+		if closest, ok := archived["closest"].(map[string]interface{}); ok {
+			if closest["available"].(bool) {
+				return closest["url"].(string)
+			}
+		}
+	}
+
+	return u
 }
