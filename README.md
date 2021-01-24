@@ -4,9 +4,19 @@ This package is a command-line tool named `archive.org` saving webpage to [Inter
 
 ## Installation
 
+From source:
+
 ```sh
 $ go get github.com/wabarc/archive.org
 ```
+
+From [gobinaries.com](https://gobinaries.com):
+
+```sh
+$ curl -sf https://gobinaries.com/wabarc/archive.org | sh
+```
+
+From [releases](https://github.com/wabarc/archive.org/releases)
 
 ## Usage
 
