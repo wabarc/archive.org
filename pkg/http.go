@@ -83,13 +83,6 @@ func (wbrc *Archiver) fetch(url string, ch chan<- string) {
 	ch <- fmt.Sprintf("The Internet Archive: %v %v for url: %v", resp.StatusCode, http.StatusText(resp.StatusCode), base+url)
 }
 
-func isURL(str string) bool {
-	re := regexp.MustCompile(`https?://?[-a-zA-Z0-9@:%._\+~#=]{1,255}\.[a-z]{0,63}\b(?:[-a-zA-Z0-9@:%_\+.~#?&//=]*)`)
-	match := re.FindAllString(str, -1)
-
-	return len(match) >= 1
-}
-
 func latest(s string) string {
 	// https://web.archive.org/*/https://example.org
 	u := fmt.Sprintf("%s/*/%s", dest, s)
