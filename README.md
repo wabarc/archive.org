@@ -13,7 +13,7 @@ $ go get github.com/wabarc/archive.org
 From [gobinaries.com](https://gobinaries.com):
 
 ```sh
-$ curl -sf https://gobinaries.com/wabarc/archive.org | sh
+$ curl -sf https://gobinaries.com/wabarc/archive.org/cmd/archive.org | sh
 ```
 
 From [releases](https://github.com/wabarc/archive.org/releases)
