@@ -56,8 +56,8 @@ func (wbrc *Archiver) Wayback(links []string) (map[string]string, error) {
 	for _, link := range collects {
 		wg.Add(1)
 		go func(link string) {
-			wbrc.archive(link, ch)
 			mu.Lock()
+			wbrc.archive(link, ch)
 			results[link] = <-ch
 			mu.Unlock()
 			wg.Done()
@@ -127,13 +127,13 @@ func (wbrc *Archiver) archive(url string, ch chan<- string) {
 	loc = resp.Header.Get("Content-Location")
 
 	if len(loc) > 0 {
-		ch <- fmt.Sprintf("%v%v", dest, loc)
+		ch <- loc
 		return
 	}
 
 	loc = resp.Header.Get("Location")
 	if len(loc) > 0 {
-		ch <- fmt.Sprintf("%v%v", dest, loc)
+		ch <- loc
 		return
 	}
 
