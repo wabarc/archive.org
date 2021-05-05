@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"regexp"
 	"sync"
 	"time"
@@ -30,6 +31,13 @@ var (
 
 	endpoint = "https://archive.org/wayback/available"
 )
+
+func init() {
+	debug := os.Getenv("DEBUG")
+	if debug == "true" || debug == "1" || debug == "on" {
+		logger.EnableDebug()
+	}
+}
 
 // Wayback is the handle of saving webpages to archive.org
 func (wbrc *Archiver) Wayback(links []string) (map[string]string, error) {
