@@ -98,22 +98,21 @@ func (wbrc *Archiver) archive(ctx context.Context, u *url.URL) (string, error) {
 		return fmt.Sprintf("%v", loc), nil
 	}
 
-	got, err := wbrc.latest(ctx, u)
+	loc, err = wbrc.latest(ctx, u)
 	if err != nil {
-		logger.Debug("[archive.org] get latest archived url failed: %v", err)
-		return "", err
+		loc = base + uri
 	}
 
 	// HTTP 509 Bandwidth Limit Exceeded
 	if resp.StatusCode == 509 {
-		return fmt.Sprint(got), nil
+		return fmt.Sprint(loc), nil
 	}
 
 	if resp.StatusCode != 200 {
-		return fmt.Sprint(got), nil
+		return fmt.Sprint(loc), nil
 	}
 
-	loc = fmt.Sprintf("The Internet Archive: %v %v for url: %v", resp.StatusCode, http.StatusText(resp.StatusCode), base+uri)
+	logger.Error("The Internet Archive: %s for url: %s", resp.Status, base+uri)
 
 	return loc, nil
 }
