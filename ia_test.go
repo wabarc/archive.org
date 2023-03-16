@@ -2,7 +2,6 @@ package ia
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
@@ -40,7 +39,7 @@ func TestPlayback(t *testing.T) {
 	defer server.Close()
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, available)
+		_, _ = w.Write([]byte(available))
 	})
 
 	uri := "https://example.com"
