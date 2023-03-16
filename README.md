@@ -7,20 +7,20 @@ This package is a command-line tool named `archive.org` saving webpage to [Inter
 From source:
 
 ```sh
-$ go get github.com/wabarc/archive.org
+go get github.com/wabarc/archive.org
 ```
 
 From [gobinaries.com](https://gobinaries.com):
 
 ```sh
-$ curl -sf https://gobinaries.com/wabarc/archive.org/cmd/archive.org | sh
+curl -sf https://gobinaries.com/wabarc/archive.org/cmd/archive.org | sh
 ```
 
 From [releases](https://github.com/wabarc/archive.org/releases)
 
 ## Usage
 
-#### Command-line
+### Command-line
 
 ```sh
 $ archive.org https://www.google.com https://www.bbc.com
@@ -33,7 +33,7 @@ https://www.bbc.com => https://web.archive.org/web/20200613094506/https://www.bb
 https://www.google.com => https://web.archive.org/web/20200613094506/https://www.google.com
 ```
 
-#### Go package interfaces
+### Go package interfaces
 
 ```go
 package main

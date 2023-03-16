@@ -67,6 +67,9 @@ func (wbrc *Archiver) Playback(ctx context.Context, u *url.URL) (result string, 
 func (wbrc *Archiver) archive(ctx context.Context, u *url.URL) (string, error) {
 	uri := u.String()
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, base+uri, nil)
+	if err != nil {
+		return "", err
+	}
 	req.Header.Add("User-Agent", userAgent)
 	resp, err := wbrc.Client.Do(req)
 	if err != nil {
