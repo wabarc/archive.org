@@ -115,8 +115,6 @@ func (wbrc *Archiver) archive(ctx context.Context, u *url.URL) (string, error) {
 		return fmt.Sprint(loc), nil
 	}
 
-	logger.Error("The Internet Archive: %s for url: %s", resp.Status, base+uri)
-
 	return loc, nil
 }
 
