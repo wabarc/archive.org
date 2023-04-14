@@ -21,12 +21,21 @@ const available = `{
 }`
 
 func TestWayback(t *testing.T) {
+	httpClient, mux, server := helper.MockServer()
+	defer server.Close()
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/wayback/available" {
+			_, _ = w.Write([]byte(available))
+		}
+	})
+
 	uri := "https://example.com"
 	u, err := url.Parse(uri)
 	if err != nil {
 		t.Fatal(err)
 	}
-	wbrc := &Archiver{}
+	wbrc := &Archiver{Client: httpClient}
 	got, err := wbrc.Wayback(context.Background(), u)
 	if err != nil {
 		t.Log(got)
