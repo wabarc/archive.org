@@ -9,6 +9,8 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"strconv"
+	"strings"
 
 	"github.com/wabarc/logger"
 )
@@ -66,10 +68,16 @@ func (wbrc *Archiver) Playback(ctx context.Context, u *url.URL) (result string, 
 
 func (wbrc *Archiver) archive(ctx context.Context, u *url.URL) (string, error) {
 	uri := u.String()
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, base+uri, nil)
+	data := url.Values{
+		"capture_all": {"on"},
+		"url":         {uri},
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, base+uri, strings.NewReader(data.Encode()))
 	if err != nil {
 		return "", err
 	}
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 	req.Header.Add("User-Agent", userAgent)
 	resp, err := wbrc.Client.Do(req)
 	if err != nil {
