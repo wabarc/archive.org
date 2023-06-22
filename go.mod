@@ -4,5 +4,5 @@ go 1.15
 
 require (
 	github.com/wabarc/helper v0.0.0-20210701193643-e0fe0a807cb9
-	github.com/wabarc/logger v0.0.0-20210417045349-d0d82e8e99ee
+	github.com/wabarc/logger v0.0.0-20210730133522-86bd3f31e792
 )
