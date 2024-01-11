@@ -49,7 +49,7 @@ jobs:
           fetch-depth: 0
 
       - name: Cache go module
-        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # v3.0.11
+        uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3.3.3
         with:
           path: |
             ~/.cache/go-build
