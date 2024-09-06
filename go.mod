@@ -1,6 +1,6 @@
 module github.com/wabarc/archive.org
 
-go 1.15
+go 1.17
 
 require (
 	github.com/wabarc/helper v0.0.0-20240906105554-3673068835d4
