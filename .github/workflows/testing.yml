@@ -71,7 +71,7 @@ jobs:
           make test-cover
 
       - name: Upload coverage
-        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3.2.1
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: coverage-${{ matrix.os }}-${{ matrix.go }}
           path: coverage.*
